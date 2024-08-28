@@ -76,8 +76,15 @@ module.exports = (sequelize, DataTypes) => {
         warnings: {
             type: DataTypes.INTEGER,
             allowNull: false
+        },
+        createdlocal_db: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
+        },
+        updatedlocal_db: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
         }
-
     },
         {
             freezeTableName: true,

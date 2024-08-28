@@ -52,7 +52,15 @@ module.exports = (sequelize, DataTypes) => {
         h_software_P: {
             type: DataTypes.STRING,
             allowNull: false
-        },      
+        },  
+        createdlocal_db: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
+        },
+        updatedlocal_db: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
+        }    
 
     },
         {

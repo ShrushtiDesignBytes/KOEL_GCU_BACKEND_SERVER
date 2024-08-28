@@ -11,19 +11,17 @@ module.exports = {
     //get all contact
     getContact: async (req, res) => {
         try {
-            const contact = await Contact.findOne({
-                order: [['createdAt', 'DESC']]
-              });
-            // const datawithIST = Contact.map(record => {
-            //     return {
-            //         ...record.dataValues,
-            //         createdAt: convertToIST(record.createdAt),
-            //         updatedAt: convertToIST(record.updatedAt),
-            //     }
-           // });
+            const contact = await Contact.findAll();
+            const datawithIST = contact.map(record => {
+                return {
+                    ...record.dataValues,
+                    createdAt: convertToIST(record.createdAt),
+                    updatedAt: convertToIST(record.updatedAt),
+                }
+           });
             return res.status(200).send(
-                contact
-               // datawithIST
+               // contact
+                datawithIST
             );
             
         } catch (error) {
@@ -35,10 +33,10 @@ module.exports = {
 
     //add contact
     createContact: async (req, res) => {
-        const { local_email, local_phone, koel_email, koel_phone, local_address } = req.body;
+        const { local_email, local_phone, koel_email, koel_phone, local_address, createdlocal_db, updatedlocal_db } = req.body;
         try {
             const contact = await Contact.create({
-                local_email, local_phone, koel_email, koel_phone, local_address
+                local_email, local_phone, koel_email, koel_phone, local_address, createdlocal_db, updatedlocal_db
             });
 
             // const datawithIST = {
@@ -92,12 +90,12 @@ module.exports = {
     //contact update by id
     updateContact: async (req, res) => {
         const id = req.params.id;
-        const { local_email, local_phone, koel_email, koel_phone, local_address } = req.body;
+        const { local_email, local_phone, koel_email, koel_phone, local_address, createdlocal_db, updatedlocal_db } = req.body;
         try {
             const ids = await Contact.findByPk(id);
             if (ids) {
                 const contact = await Contact.update({
-                    local_email, local_phone, koel_email, koel_phone, local_address
+                    local_email, local_phone, koel_email, koel_phone, local_address, createdlocal_db, updatedlocal_db
                 },
                     {
                         where: { id }

@@ -11,20 +11,20 @@ module.exports = {
     //get all genset
     getGenset: async (req, res) => {
         try {
-           // const genset = await Genset.findAll();
-            // const datawithIST = genset.map(record => {
-            //     return {
-            //         ...record.dataValues,
-            //         createdAt: convertToIST(record.createdAt),
-            //         updatedAt: convertToIST(record.updatedAt),
-            //     }
-           // });
-           const genset = await Genset.findOne({
-            order: [['createdAt', 'DESC']]
-          });
+        const genset = await Genset.findAll();
+            const datawithIST = genset.map(record => {
+                return {
+                    ...record.dataValues,
+                    createdAt: convertToIST(record.createdAt),
+                    updatedAt: convertToIST(record.updatedAt),
+                }
+           });
+        //    const genset = await Genset.findOne({
+        //     order: [['createdAt', 'DESC']]
+        //   });
             return res.status(200).send(
-                genset
-               // datawithIST
+               // genset
+               datawithIST
             );
             
         } catch (error) {
@@ -37,11 +37,11 @@ module.exports = {
     //add genset
     createGenset: async (req, res) => {
         const { avg_voltage_pn, avg_voltage_pp, avg_power_kva, avg_power_pw, frequency, power_factor, total_working_capacity, running_time, fuel_level,
-            loads, coolant_temp, engine_speed, alternator_voltage, lube_oil_pressure, alternator_current, battery_voltage, shutdowns, warnings } = req.body;
+            loads, coolant_temp, engine_speed, alternator_voltage, lube_oil_pressure, alternator_current, battery_voltage, shutdowns, warnings, createdlocal_db, updatedlocal_db } = req.body;
         try {
             const genset = await Genset.create({
                 avg_voltage_pn, avg_voltage_pp, avg_power_kva, avg_power_pw, frequency, power_factor, total_working_capacity, running_time, fuel_level,
-                loads, coolant_temp, engine_speed, alternator_voltage, lube_oil_pressure, alternator_current, battery_voltage, shutdowns, warnings
+                loads, coolant_temp, engine_speed, alternator_voltage, lube_oil_pressure, alternator_current, battery_voltage, shutdowns, warnings, createdlocal_db, updatedlocal_db
             });
 
             // const datawithIST = {
@@ -96,11 +96,11 @@ module.exports = {
     updateGenset: async (req, res) => {
         const id = req.params.id;
         const { avg_voltage_pn, avg_voltage_pp, avg_power_kva, avg_power_pw, frequency, power_factor, total_working_capacity, running_time, fuel_level,
-            loads, coolant_temp, engine_speed, alternator_voltage, lube_oil_pressure, alternator_current, battery_voltage, shutdowns, warnings } = req.body;
+            loads, coolant_temp, engine_speed, alternator_voltage, lube_oil_pressure, alternator_current, battery_voltage, shutdowns, warnings, createdlocal_db, updatedlocal_db } = req.body;
         try {
             const genset = await Genset.update({
                 avg_voltage_pn, avg_voltage_pp, avg_power_kva, avg_power_pw, frequency, power_factor, total_working_capacity, running_time, fuel_level,
-                loads, coolant_temp, engine_speed, alternator_voltage, lube_oil_pressure, alternator_current, battery_voltage, shutdowns, warnings
+                loads, coolant_temp, engine_speed, alternator_voltage, lube_oil_pressure, alternator_current, battery_voltage, shutdowns, warnings, createdlocal_db, updatedlocal_db
             },
                 {
                     where: { id }

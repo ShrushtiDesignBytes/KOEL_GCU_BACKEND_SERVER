@@ -11,19 +11,17 @@ module.exports = {
     //get all mains
     getMains: async (req, res) => {
         try {
-            const mains = await Mains.findOne({
-                order: [['createdAt', 'DESC']]
-              });
-            // const datawithIST = Mains.map(record => {
-            //     return {
-            //         ...record.dataValues,
-            //         createdAt: convertToIST(record.createdAt),
-            //         updatedAt: convertToIST(record.updatedAt),
-            //     }
-           // });
+            const mains = await Mains.findAll();
+            const datawithIST = mains.map(record => {
+                return {
+                    ...record.dataValues,
+                    createdAt: convertToIST(record.createdAt),
+                    updatedAt: convertToIST(record.updatedAt),
+                }
+           });
             return res.status(200).send(
-                mains
-               // datawithIST
+                //mains
+                datawithIST
             );
             
         } catch (error) {
@@ -35,10 +33,10 @@ module.exports = {
 
     //add mains
     createMains: async (req, res) => {
-        const { main_voltage_ry, main_voltage_yb, main_voltage_rb, frequency, phase_angle} = req.body;
+        const { main_voltage_ry, main_voltage_yb, main_voltage_rb, frequency, phase_angle, createdlocal_db, updatedlocal_db} = req.body;
         try {
             const mains = await Mains.create({
-                main_voltage_ry, main_voltage_yb, main_voltage_rb, frequency, phase_angle
+                main_voltage_ry, main_voltage_yb, main_voltage_rb, frequency, phase_angle, createdlocal_db, updatedlocal_db
             });
 
             // const datawithIST = {
@@ -92,10 +90,10 @@ module.exports = {
     //mains update by id
     updateMains: async (req, res) => {
         const id = req.params.id;
-        const { main_voltage_ry, main_voltage_yb, main_voltage_rb, frequency, phase_angle } = req.body;
+        const { main_voltage_ry, main_voltage_yb, main_voltage_rb, frequency, phase_angle, createdlocal_db, updatedlocal_db } = req.body;
         try {
             const mains = await Mains.update({
-                main_voltage_ry, main_voltage_yb, main_voltage_rb, frequency, phase_angle
+                main_voltage_ry, main_voltage_yb, main_voltage_rb, frequency, phase_angle, createdlocal_db, updatedlocal_db
             },
                 {
                     where: { id }

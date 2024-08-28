@@ -81,6 +81,14 @@ module.exports = (sequelize, DataTypes) => {
         maintainance_running_time: {
             type: DataTypes.INTEGER,
             allowNull: false
+        },
+        createdlocal_db: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
+        },
+        updatedlocal_db: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
         }
 
     },

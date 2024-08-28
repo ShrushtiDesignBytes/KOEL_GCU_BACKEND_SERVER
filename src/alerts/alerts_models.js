@@ -36,6 +36,14 @@ module.exports = (sequelize, DataTypes) => {
         additionalInfo: {
             type: DataTypes.JSON,
             allowNull: false
+        },
+        createdlocal_db: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
+        },
+        updatedlocal_db: {
+            type: DataTypes.DATE,
+            defaultValue: DataTypes.NOW,
         }
 
     },

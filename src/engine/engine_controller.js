@@ -16,17 +16,16 @@ module.exports = {
     //get all engine
     getEngine: async (req, res) => {
         try {
-            const engine = await Engine.findOne({
-                order: [['createdAt', 'DESC']]
-              })
-            const datawithIST =  {
-                    ...engine.dataValues,
-                    maintainance_last_date: convert_Maintaince_date(engine.maintainance_last_date),
-                    maintainance_next_date: convert_Maintaince_date(engine.maintainance_next_date),
-                    createdAt: convertToIST(engine.createdAt),
-                    updatedAt: convertToIST(engine.updatedAt),
+            const engine = await Engine.findAll()
+            const datawithIST =  engine.map(record => {
+                     return {
+                    ...record.dataValues,
+                    maintainance_last_date: convert_Maintaince_date(record.maintainance_last_date),
+                    maintainance_next_date: convert_Maintaince_date(record.maintainance_next_date),
+                    createdAt: convertToIST(record.createdAt),
+                    updatedAt: convertToIST(record.updatedAt),
                 }
-            ;
+            })
             return res.status(200).send(
                 datawithIST
             );
@@ -40,10 +39,10 @@ module.exports = {
 
     //add engine
     createEngine: async (req, res) => {
-        const { running_time, engine_speed, battery_voltage, lube_oil_pressure, coolant_temperature, canopy_temperature, fuel_temperature, exhaust_temperature, lube_oil_temperature, manifold_temperature, manifold_pressure, turbo_speed, fuel_level, shutdowns, warnings, maintainance_last_date, maintainance_next_date, maintainance_time_left, maintainance_running_time  } = req.body;
+        const { running_time, engine_speed, battery_voltage, lube_oil_pressure, coolant_temperature, canopy_temperature, fuel_temperature, exhaust_temperature, lube_oil_temperature, manifold_temperature, manifold_pressure, turbo_speed, fuel_level, shutdowns, warnings, maintainance_last_date, maintainance_next_date, maintainance_time_left, maintainance_running_time, createdlocal_db, updatedlocal_db  } = req.body;
         try {
             const engine = await Engine.create({
-                running_time, engine_speed, battery_voltage, lube_oil_pressure, coolant_temperature, canopy_temperature, fuel_temperature, exhaust_temperature, lube_oil_temperature, manifold_temperature, manifold_pressure, turbo_speed, fuel_level, shutdowns, warnings, maintainance_last_date, maintainance_next_date, maintainance_time_left, maintainance_running_time
+                running_time, engine_speed, battery_voltage, lube_oil_pressure, coolant_temperature, canopy_temperature, fuel_temperature, exhaust_temperature, lube_oil_temperature, manifold_temperature, manifold_pressure, turbo_speed, fuel_level, shutdowns, warnings, maintainance_last_date, maintainance_next_date, maintainance_time_left, maintainance_running_time, createdlocal_db, updatedlocal_db
             });
 
             const datawithIST = {
@@ -98,7 +97,7 @@ module.exports = {
     //engine update by id
     updateEngine: async (req, res) => {
         const id = req.params.id;
-        const { running_time, engine_speed, battery_voltage, lube_oil_pressure, coolant_temperature, canopy_temperature, fuel_temperature, exhaust_temperature, lube_oil_temperature, manifold_temperature, manifold_pressure, turbo_speed, fuel_level, shutdowns, warnings, maintainance_last_date, maintainance_next_date, maintainance_time_left, maintainance_running_time } = req.body;
+        const { running_time, engine_speed, battery_voltage, lube_oil_pressure, coolant_temperature, canopy_temperature, fuel_temperature, exhaust_temperature, lube_oil_temperature, manifold_temperature, manifold_pressure, turbo_speed, fuel_level, shutdowns, warnings, maintainance_last_date, maintainance_next_date, maintainance_time_left, maintainance_running_time, createdlocal_db, updatedlocal_db } = req.body;
         try {
             const engineId = await Engine.findByPk(id);
             if(engineId === null){
@@ -107,7 +106,7 @@ module.exports = {
                 });
             }
             const engine = await Engine.update({
-                running_time, engine_speed, battery_voltage, lube_oil_pressure, coolant_temperature, canopy_temperature, fuel_temperature, exhaust_temperature, lube_oil_temperature, manifold_temperature, manifold_pressure, turbo_speed, fuel_level, shutdowns, warnings, maintainance_last_date, maintainance_next_date, maintainance_time_left, maintainance_running_time
+                running_time, engine_speed, battery_voltage, lube_oil_pressure, coolant_temperature, canopy_temperature, fuel_temperature, exhaust_temperature, lube_oil_temperature, manifold_temperature, manifold_pressure, turbo_speed, fuel_level, shutdowns, warnings, maintainance_last_date, maintainance_next_date, maintainance_time_left, maintainance_running_time, createdlocal_db, updatedlocal_db
             },
                 {
                     where: { id }

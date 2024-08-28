@@ -42,7 +42,7 @@ module.exports = {
     //add alerts
     createAlerts: async (req, res) => {
 
-        const { faultCode, faultType, alertCategory, date, resolved, status, imageType, additionalInfo } = req.body;
+        const { faultCode, faultType, alertCategory, date, resolved, status, imageType, additionalInfo, createdlocal_db, updatedlocal_db } = req.body;
         try {
             const alerts = await Alerts.create({
                 faultCode,
@@ -52,7 +52,8 @@ module.exports = {
                 resolved,
                 status,
                 imageType,
-                additionalInfo
+                additionalInfo,
+                createdlocal_db, updatedlocal_db
             });
 
             const datawithIST = {
@@ -113,11 +114,11 @@ module.exports = {
     //alerts update by id
     updateAlerts: async (req, res) => {
         const id = req.params.id;
-        const { faultCode, faultType, alertCategory, date, resolved, status, imageType, additionalInfo } = req.body;
+        const { faultCode, faultType, alertCategory, date, resolved, status, imageType, additionalInfo, createdlocal_db, updatedlocal_db } = req.body;
         
         try {
             const alerts = await Alerts.update({
-                faultCode, faultType, alertCategory, date, resolved, status, imageType, additionalInfo
+                faultCode, faultType, alertCategory, date, resolved, status, imageType, additionalInfo, createdlocal_db, updatedlocal_db
             },
                 {
                     where: { id }
