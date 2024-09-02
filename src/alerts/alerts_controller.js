@@ -17,10 +17,11 @@ module.exports = {
             const datawithIST = alerts.map(record => {
                     return {
                         ...record.dataValues,
-                        date: convertToIST(alerts.date),
-                        resolved: convertToIST(alerts.resolved)
+                        date: convertToIST(record.date),
+                        resolved: convertToIST(record.resolved)
                     }
                });
+
             // const datawithIST = {
             //         ...alerts.dataValues,
             //         date: convertToIST(alerts.date),
@@ -28,7 +29,7 @@ module.exports = {
             //     }
 
             return res.status(200).send(
-               // alerts
+               //alerts
                 datawithIST
             );
 
@@ -42,7 +43,7 @@ module.exports = {
     //add alerts
     createAlerts: async (req, res) => {
 
-        const { faultCode, faultType, alertCategory, date, resolved, status, imageType, additionalInfo, createdlocal_db, updatedlocal_db } = req.body;
+        const { faultCode, faultType, alertCategory, date, resolved, status, imageType, details, additionalInfo, createdlocal_db, updatedlocal_db } = req.body;
         try {
             const alerts = await Alerts.create({
                 faultCode,
@@ -52,6 +53,7 @@ module.exports = {
                 resolved,
                 status,
                 imageType,
+                details,
                 additionalInfo,
                 createdlocal_db, updatedlocal_db
             });
@@ -114,11 +116,11 @@ module.exports = {
     //alerts update by id
     updateAlerts: async (req, res) => {
         const id = req.params.id;
-        const { faultCode, faultType, alertCategory, date, resolved, status, imageType, additionalInfo, createdlocal_db, updatedlocal_db } = req.body;
+        const { faultCode, faultType, alertCategory, date, resolved, status, imageType, details, additionalInfo, createdlocal_db, updatedlocal_db } = req.body;
         
         try {
             const alerts = await Alerts.update({
-                faultCode, faultType, alertCategory, date, resolved, status, imageType, additionalInfo, createdlocal_db, updatedlocal_db
+                faultCode, faultType, alertCategory, date, resolved, status, imageType, details, additionalInfo, createdlocal_db, updatedlocal_db
             },
                 {
                     where: { id }

@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true
         },
         alternator_voltage: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DECIMAL,
             allowNull: false
         },
         alternator_current: {
@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         },
         power_factor: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DECIMAL,
             allowNull: false
         },
         kilowatt_hour: {
