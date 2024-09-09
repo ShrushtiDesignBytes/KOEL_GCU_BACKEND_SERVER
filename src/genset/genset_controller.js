@@ -15,6 +15,8 @@ module.exports = {
             const datawithIST = genset.map(record => {
                 return {
                     ...record.dataValues,
+                    createdlocal_db: convertToIST(record.createdlocal_db),
+                    updatedlocal_db: convertToIST(record.updatedlocal_db),
                     createdAt: convertToIST(record.createdAt),
                     updatedAt: convertToIST(record.updatedAt),
                 }
@@ -44,15 +46,17 @@ module.exports = {
                 loads, coolant_temp, engine_speed, alternator_voltage, lube_oil_pressure, alternator_current, battery_voltage, shutdowns, warnings, createdlocal_db, updatedlocal_db
             });
 
-            // const datawithIST = {
-            //         ...genset.dataValues,
-            //         createdAt: convertToIST(genset.createdAt),
-            //         updatedAt: convertToIST(genset.updatedAt),
-            //     }
+            const datawithIST = {
+                    ...genset.dataValues,
+                    createdlocal_db: convertToIST(genset.createdlocal_db),
+                    updatedlocal_db: convertToIST(genset.updatedlocal_db),
+                    createdAt: convertToIST(genset.createdAt),
+                    updatedAt: convertToIST(genset.updatedAt),
+                }
             
             return res.status(200).send(
-                genset
-                //datawithIST
+                //genset
+                datawithIST
             );
         } catch (error) {
             return res.status(400).json(

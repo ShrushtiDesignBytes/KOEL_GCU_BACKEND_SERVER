@@ -15,6 +15,8 @@ module.exports = {
             const datawithIST = system.map(record => {
                 return {
                     ...record.dataValues,
+                    createdlocal_db: convertToIST(record.createdlocal_db),
+                    updatedlocal_db: convertToIST(record.updatedlocal_db),
                     createdAt: convertToIST(record.createdAt),
                     updatedAt: convertToIST(record.updatedAt),
                 }
@@ -39,15 +41,17 @@ module.exports = {
                 g_hardware_V, g_hardware_P, g_hardware_S, g_software_V, g_software_P, g_software_S, h_hardware_V, h_hardware_P, h_hardware_S, h_software_V, h_software_P, h_software_S, createdlocal_db, updatedlocal_db
             });
 
-            // const datawithIST = {
-            //         ...System.dataValues,
-            //         createdAt: convertToIST(System.createdAt),
-            //         updatedAt: convertToIST(System.updatedAt),
-            //     }
+            const datawithIST = {
+                    ...system.dataValues,
+                    createdlocal_db: convertToIST(system.createdlocal_db),
+                    updatedlocal_db: convertToIST(system.updatedlocal_db),
+                    createdAt: convertToIST(system.createdAt),
+                    updatedAt: convertToIST(system.updatedAt),
+                }
             
             return res.status(200).send(
-                system
-                //datawithIST
+                //system
+                datawithIST
             );
         } catch (error) {
             return res.status(400).json(

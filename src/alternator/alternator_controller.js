@@ -15,6 +15,8 @@ module.exports = {
             const datawithIST = alternator.map(record => {
                 return {
                     ...record.dataValues,
+                    createdlocal_db: convertToIST(record.createdlocal_db),
+                    updatedlocal_db: convertToIST(record.updatedlocal_db),
                     createdAt: convertToIST(record.createdAt),
                     updatedAt: convertToIST(record.updatedAt),
                 }
@@ -39,15 +41,17 @@ module.exports = {
                 alternator_voltage, alternator_current,power_factor,kilowatt_hour,frequency,avg_kw,avg_kva,avg_kvar,voltage,apparent_power,energy_chart,active_power,reactive_power,current, power_factor_ryb, createdlocal_db, updatedlocal_db
             });
 
-            // const datawithIST = {
-            //         ...Alternator.dataValues,
-            //         createdAt: convertToIST(Alternator.createdAt),
-            //         updatedAt: convertToIST(Alternator.updatedAt),
-            //     }
+            const datawithIST = {
+                    ...alternator.dataValues,
+                    createdlocal_db: convertToIST(alternator.createdlocal_db),
+                    updatedlocal_db: convertToIST(alternator.updatedlocal_db),
+                    createdAt: convertToIST(alternator.createdAt),
+                    updatedAt: convertToIST(alternator.updatedAt),
+                }
             
             return res.status(200).send(
-                alternator
-                //datawithIST
+               // alternator
+                datawithIST
             );
         } catch (error) {
             return res.status(400).json(

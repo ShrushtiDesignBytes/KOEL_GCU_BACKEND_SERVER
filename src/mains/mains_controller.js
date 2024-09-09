@@ -15,6 +15,8 @@ module.exports = {
             const datawithIST = mains.map(record => {
                 return {
                     ...record.dataValues,
+                    createdlocal_db: convertToIST(record.createdlocal_db),
+                    updatedlocal_db: convertToIST(record.updatedlocal_db),
                     createdAt: convertToIST(record.createdAt),
                     updatedAt: convertToIST(record.updatedAt),
                 }
@@ -39,15 +41,17 @@ module.exports = {
                 main_voltage_ry, main_voltage_yb, main_voltage_rb, frequency, phase_angle, createdlocal_db, updatedlocal_db
             });
 
-            // const datawithIST = {
-            //         ...Mains.dataValues,
-            //         createdAt: convertToIST(Mains.createdAt),
-            //         updatedAt: convertToIST(Mains.updatedAt),
-            //     }
+            const datawithIST = {
+                    ...mains.dataValues,
+                    createdlocal_db: convertToIST(mains.createdlocal_db),
+                    updatedlocal_db: convertToIST(mains.updatedlocal_db),
+                    createdAt: convertToIST(mains.createdAt),
+                    updatedAt: convertToIST(mains.updatedAt),
+                }
             
             return res.status(200).send(
-                mains
-                //datawithIST
+               // mains
+                datawithIST
             );
         } catch (error) {
             return res.status(400).json(

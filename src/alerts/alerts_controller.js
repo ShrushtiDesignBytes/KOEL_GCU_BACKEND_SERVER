@@ -18,7 +18,11 @@ module.exports = {
                     return {
                         ...record.dataValues,
                         date: convertToIST(record.date),
-                        resolved: convertToIST(record.resolved)
+                        resolved: convertToIST(record.resolved),
+                        createdlocal_db: convertToIST(record.createdlocal_db),
+                        updatedlocal_db: convertToIST(record.updatedlocal_db),
+                        createdAt: convertToIST(record.createdAt),
+                        updatedAt: convertToIST(record.updatedAt),
                     }
                });
 
@@ -62,6 +66,10 @@ module.exports = {
                     ...alerts.dataValues,
                     date: convertToIST(alerts.date),
                     resolved: convertToIST(alerts.resolved),
+                    createdlocal_db: convertToIST(alerts.createdlocal_db),
+                    updatedlocal_db: convertToIST(alerts.updatedlocal_db),
+                    createdAt: convertToIST(alerts.createdAt),
+                    updatedAt: convertToIST(alerts.updatedAt),
                 }
 
             return res.status(200).send(

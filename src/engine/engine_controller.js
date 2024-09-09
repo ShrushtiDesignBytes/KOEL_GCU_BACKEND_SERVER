@@ -22,6 +22,8 @@ module.exports = {
                     ...record.dataValues,
                     maintainance_last_date: convert_Maintaince_date(record.maintainance_last_date),
                     maintainance_next_date: convert_Maintaince_date(record.maintainance_next_date),
+                    createdlocal_db: convertToIST(record.createdlocal_db),
+                    updatedlocal_db: convertToIST(record.updatedlocal_db),
                     createdAt: convertToIST(record.createdAt),
                     updatedAt: convertToIST(record.updatedAt),
                 }
@@ -49,6 +51,8 @@ module.exports = {
                     ...engine.dataValues,
                     maintainance_last_date: convertToIST(engine.maintainance_last_date),
                     maintainance_next_date: convertToIST(engine.maintainance_next_date),
+                    createdlocal_db: convertToIST(engine.createdlocal_db),
+                    updatedlocal_db: convertToIST(engine.updatedlocal_db),
                     createdAt: convertToIST(engine.createdAt),
                     updatedAt: convertToIST(engine.updatedAt),
                 }

@@ -15,6 +15,8 @@ module.exports = {
             const datawithIST = contact.map(record => {
                 return {
                     ...record.dataValues,
+                    createdlocal_db: convertToIST(record.createdlocal_db),
+                    updatedlocal_db: convertToIST(record.updatedlocal_db),
                     createdAt: convertToIST(record.createdAt),
                     updatedAt: convertToIST(record.updatedAt),
                 }
@@ -39,15 +41,17 @@ module.exports = {
                 local_email, local_phone, koel_email, koel_phone, local_address, createdlocal_db, updatedlocal_db
             });
 
-            // const datawithIST = {
-            //         ...Contact.dataValues,
-            //         createdAt: convertToIST(Contact.createdAt),
-            //         updatedAt: convertToIST(Contact.updatedAt),
-            //     }
+            const datawithIST = {
+                    ...contact.dataValues,
+                    createdlocal_db: convertToIST(contact.createdlocal_db),
+                    updatedlocal_db: convertToIST(contact.updatedlocal_db),
+                    createdAt: convertToIST(contact.createdAt),
+                    updatedAt: convertToIST(contact.updatedAt),
+                }
             
             return res.status(200).send(
-                contact
-                //datawithIST
+               // contact
+                datawithIST
             );
         } catch (error) {
             return res.status(400).json(
