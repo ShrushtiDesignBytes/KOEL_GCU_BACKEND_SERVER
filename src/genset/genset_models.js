@@ -77,21 +77,6 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             allowNull: false
         },
-        status: {
-            type: DataTypes.SMALLINT,
-            allowNull: false,
-            defaultValue: 1,
-        },
-        status_A: {
-            type: DataTypes.SMALLINT,
-            allowNull: false,
-            defaultValue: 1,
-        },
-        status_B: {
-            type: DataTypes.SMALLINT,
-            allowNull: false,
-            defaultValue: 1,
-        },
         createdlocal_db: {
             type: DataTypes.DATE,
             defaultValue: DataTypes.NOW,

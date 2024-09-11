@@ -39,11 +39,11 @@ module.exports = {
     //add genset
     createGenset: async (req, res) => {
         const { avg_voltage_pn, avg_voltage_pp, avg_power_kva, avg_power_pw, frequency, power_factor, total_working_capacity, running_time, fuel_level,
-            loads, coolant_temp, engine_speed, alternator_voltage, lube_oil_pressure, alternator_current, battery_voltage, status, status_A, status_B, shutdowns, warnings, createdlocal_db, updatedlocal_db } = req.body;
+            loads, coolant_temp, engine_speed, alternator_voltage, lube_oil_pressure, alternator_current, battery_voltage, shutdowns, warnings, createdlocal_db, updatedlocal_db } = req.body;
         try {
             const genset = await Genset.create({
                 avg_voltage_pn, avg_voltage_pp, avg_power_kva, avg_power_pw, frequency, power_factor, total_working_capacity, running_time, fuel_level,
-                loads, coolant_temp, engine_speed, alternator_voltage, lube_oil_pressure, alternator_current, battery_voltage, status, status_A, status_B, shutdowns, warnings, createdlocal_db, updatedlocal_db
+                loads, coolant_temp, engine_speed, alternator_voltage, lube_oil_pressure, alternator_current, battery_voltage, shutdowns, warnings, createdlocal_db, updatedlocal_db
             });
 
             const datawithIST = {
@@ -100,11 +100,11 @@ module.exports = {
     updateGenset: async (req, res) => {
         const id = req.params.id;
         const { avg_voltage_pn, avg_voltage_pp, avg_power_kva, avg_power_pw, frequency, power_factor, total_working_capacity, running_time, fuel_level,
-            loads, coolant_temp, engine_speed, alternator_voltage, lube_oil_pressure, alternator_current, battery_voltage, shutdowns, warnings, status, status_A, status_B, createdlocal_db, updatedlocal_db } = req.body;
+            loads, coolant_temp, engine_speed, alternator_voltage, lube_oil_pressure, alternator_current, battery_voltage, shutdowns, warnings, createdlocal_db, updatedlocal_db } = req.body;
         try {
             const genset = await Genset.update({
                 avg_voltage_pn, avg_voltage_pp, avg_power_kva, avg_power_pw, frequency, power_factor, total_working_capacity, running_time, fuel_level,
-                loads, coolant_temp, engine_speed, alternator_voltage, lube_oil_pressure, alternator_current, battery_voltage, shutdowns, warnings, status, status_A, status_B, createdlocal_db, updatedlocal_db
+                loads, coolant_temp, engine_speed, alternator_voltage, lube_oil_pressure, alternator_current, battery_voltage, shutdowns, warnings, createdlocal_db, updatedlocal_db
             },
                 {
                     where: { id }
