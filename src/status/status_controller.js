@@ -15,9 +15,18 @@ module.exports = {
         //    const genset = await Genset.findOne({
         //     order: [['createdAt', 'DESC']]
         //   });
+        const datawithIST = status.map(record => {
+            return {
+                ...record.dataValues,
+                createdlocal_db: convertToIST(record.createdlocal_db),
+                updatedlocal_db: convertToIST(record.updatedlocal_db),
+                createdAt: convertToIST(record.createdAt),
+                updatedAt: convertToIST(record.updatedAt),
+            }
+       });
             return res.status(200).send(
-               status
-              // datawithIST
+               //status
+              datawithIST
             );
             
         } catch (error) {
@@ -29,10 +38,10 @@ module.exports = {
 
     //add genset
     createStatus: async (req, res) => {
-        const { status, status_A, status_B, data_sent, createdlocal_db, updatedlocal_db } = req.body;
+        const { status, status_A, status_B, createdlocal_db, updatedlocal_db } = req.body;
         try {
             const data = await Status.create({
-                status, status_A, status_B, data_sent, createdlocal_db, updatedlocal_db
+                status, status_A, status_B, createdlocal_db, updatedlocal_db
             });
 
             // const datawithIST = {
@@ -55,10 +64,10 @@ module.exports = {
     //genset update by id
     updateStatus: async (req, res) => {
         const id = req.params.id;
-        const {status, status_A, status_B, data_sent, createdlocal_db, updatedlocal_db } = req.body;
+        const {status, status_A, status_B, createdlocal_db, updatedlocal_db } = req.body;
         try {
             const data = await Status.update({
-                status, status_A, status_B, data_sent, createdlocal_db, updatedlocal_db
+                status, status_A, status_B, createdlocal_db, updatedlocal_db
             },
                 {
                     where: { id }

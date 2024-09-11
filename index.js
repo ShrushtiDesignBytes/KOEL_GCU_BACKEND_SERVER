@@ -11,6 +11,7 @@ const alternatorRoutes = require('./src/alternator/alternator_routes.js');
 const alertsRoutes = require('./src/alerts/alerts_routes.js');
 const systemRoutes = require('./src/system_details/system_details_routes.js');
 const contactRoutes = require('./src/contact_details/contact_details_routes.js');
+const statusRoutes = require('./src/status/status_routes.js')  //--changes
 
 const app = express();
 const PORT = 5000 || process.env.PORT;
@@ -28,6 +29,7 @@ app.use('/alternator', alternatorRoutes);
 app.use('/alerts', alertsRoutes);
 app.use('/contact', contactRoutes);
 app.use('/system', systemRoutes);
+app.use('/status', statusRoutes);  
 
 app.get('/', (req,res) => res.send('Hello User'));
 

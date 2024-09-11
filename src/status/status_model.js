@@ -21,9 +21,6 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             defaultValue: 1,
         },
-        data_sent:{
-            type: DataTypes.BOOLEAN,
-        },
         createdlocal_db: {
             type: DataTypes.DATE,
             defaultValue: DataTypes.NOW,
@@ -35,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
     },
         {
             freezeTableName: true,
-            timestamps: false
+            timestamps: true
         });
 
 
