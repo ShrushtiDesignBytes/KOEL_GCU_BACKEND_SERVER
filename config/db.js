@@ -28,6 +28,7 @@ db.alternator = require('../src/alternator/alternator_models')(sequelize,DataTyp
 db.alerts = require('../src/alerts/alerts_models')(sequelize,DataTypes);
 db.system = require('../src/system_details/system_details_models')(sequelize,DataTypes);
 db.contact = require('../src/contact_details/contact_details_models')(sequelize,DataTypes);
+db.status = require('../src/status/status_model')(sequelize,DataTypes); //--changes
 
 
 db.sequelize.sync({force: false})
