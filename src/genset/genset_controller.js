@@ -1,5 +1,6 @@
 var db = require('../../config/db');
 const Genset = db.genset;
+const sequelize = db.sequelize;
 const moment = require('moment-timezone');
 
 function convertToIST(date) {
@@ -11,7 +12,7 @@ module.exports = {
     //get all genset
     getGenset: async (req, res) => {
         try {
-        const genset = await Genset.findAll();
+            const genset = await Genset.findAll();
             const datawithIST = genset.map(record => {
                 return {
                     ...record.dataValues,
@@ -20,15 +21,15 @@ module.exports = {
                     createdAt: convertToIST(record.createdAt),
                     updatedAt: convertToIST(record.updatedAt),
                 }
-           });
-        //    const genset = await Genset.findOne({
-        //     order: [['createdAt', 'DESC']]
-        //   });
+            });
+            //    const genset = await Genset.findOne({
+            //     order: [['createdAt', 'DESC']]
+            //   });
             return res.status(200).send(
-               // genset
-               datawithIST
+                // genset
+                datawithIST
             );
-            
+
         } catch (error) {
             return res.status(400).send(
                 error.message
@@ -38,27 +39,68 @@ module.exports = {
 
     //add genset
     createGenset: async (req, res) => {
-        const { avg_voltage_pn, avg_voltage_pp, avg_power_kva, avg_power_pw, frequency, power_factor, total_working_capacity, running_time, fuel_level,
-            loads, coolant_temp, engine_speed, alternator_voltage, lube_oil_pressure, alternator_current, battery_voltage, shutdowns, warnings, createdlocal_db, updatedlocal_db } = req.body;
-        try {
-            const genset = await Genset.create({
-                avg_voltage_pn, avg_voltage_pp, avg_power_kva, avg_power_pw, frequency, power_factor, total_working_capacity, running_time, fuel_level,
-                loads, coolant_temp, engine_speed, alternator_voltage, lube_oil_pressure, alternator_current, battery_voltage, shutdowns, warnings, createdlocal_db, updatedlocal_db
-            });
 
-            const datawithIST = {
-                    ...genset.dataValues,
-                    createdlocal_db: convertToIST(genset.createdlocal_db),
-                    updatedlocal_db: convertToIST(genset.updatedlocal_db),
-                    createdAt: convertToIST(genset.createdAt),
-                    updatedAt: convertToIST(genset.updatedAt),
-                }
-            
-            return res.status(200).send(
-                //genset
-                datawithIST
-            );
+        const gensetArray = req.body;
+
+        try {
+            const createdGenset = await Promise.all(
+                gensetArray.map((async (gensetData) => {
+                    const { avg_voltage_pn, avg_voltage_pp, avg_power_kva, avg_power_pw, frequency, power_factor, total_working_capacity, running_time, fuel_level, loads, coolant_temp, engine_speed, alternator_voltage, lube_oil_pressure, alternator_current, battery_voltage, shutdowns, warnings, createdlocal_db, updatedlocal_db } = gensetData;
+
+                    const [result, metadata] = await sequelize.query(`
+                        CALL unique_genset(
+                            :v_avg_voltage_pn, :v_avg_voltage_pp, :v_avg_power_kva, :v_avg_power_pw, :v_frequency, :v_power_factor::numeric,
+                            :v_total_working_capacity, :v_running_time, :v_fuel_level, :v_loads, :v_coolant_temp::numeric, :v_engine_speed,
+                            :v_alternator_voltage, :v_lube_oil_pressure::numeric, :v_alternator_current, :v_battery_voltage::numeric, 
+                            :v_shutdowns, :v_warnings,
+                            :v_createdlocal_db::timestamptz, :v_updatedlocal_db::timestamptz, :result_json
+                        )
+                    `, {
+                        replacements: {
+                            v_avg_voltage_pn: avg_voltage_pn,
+                            v_avg_voltage_pp: avg_voltage_pp,
+                            v_avg_power_kva: avg_power_kva,
+                            v_avg_power_pw: avg_power_pw,
+                            v_frequency: frequency,
+                            v_power_factor: power_factor,
+                            v_total_working_capacity: total_working_capacity,
+                            v_running_time: running_time,
+                            v_fuel_level: fuel_level,
+                            v_loads: loads,
+                            v_coolant_temp: coolant_temp,
+                            v_engine_speed: engine_speed,
+                            v_alternator_voltage: alternator_voltage,
+                            v_lube_oil_pressure: lube_oil_pressure,
+                            v_alternator_current: alternator_current,
+                            v_battery_voltage: battery_voltage,
+                            v_shutdowns: shutdowns,
+                            v_warnings: warnings,
+                            v_createdlocal_db: createdlocal_db,
+                            v_updatedlocal_db: updatedlocal_db,
+                            result_json: null
+                        },
+                        type: sequelize.QueryTypes.RAW
+                    });
+
+                    const genset = result[0].result_json;
+
+                    const datawithIST = await genset && {
+                        ...genset,
+                        createdlocal_db: convertToIST(genset.createdlocal_db),
+                        updatedlocal_db: convertToIST(genset.updatedlocal_db),
+                        createdAt: convertToIST(genset.createdAt),
+                        updatedAt: convertToIST(genset.updatedAt),
+                    };
+
+                    const data = genset === null ? 'Already saved same data in database' : datawithIST;
+                    return data;
+                }))
+            )
+
+            return res.status(200).send(createdGenset);
+
         } catch (error) {
+            console.log(error)
             return res.status(400).json(
                 error.message
             );
