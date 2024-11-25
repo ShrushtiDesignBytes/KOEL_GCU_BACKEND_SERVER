@@ -40,16 +40,18 @@ module.exports = {
         const mainsArray = req.body;
 
         try {
-            const createdMains = await Promise.all(
-                mainsArray.map((async (mainsData) => { 
-                    const { main_voltage_ry, main_voltage_yb, main_voltage_rb, frequency, phase_angle, createdlocal_db, updatedlocal_db } = mainsData;
+            const createdMains = []
+            for (const mainsData of mainsArray) {
 
+                const { main_voltage_ry, main_voltage_yb, main_voltage_rb, frequency, phase_angle, createdlocal_db, updatedlocal_db } = mainsData;
+
+                try {
                     const [result, metadata] = await sequelize.query(`
-                        CALL unique_mains(
-                            :v_main_voltage_ry, :v_main_voltage_yb, :v_main_voltage_rb, :v_frequency, :v_phase_angle,
-                            :v_createdlocal_db::timestamptz, :v_updatedlocal_db::timestamptz, :result_json
-                        )
-                    `, {
+                            CALL unique_mains(
+                                :v_main_voltage_ry, :v_main_voltage_yb, :v_main_voltage_rb, :v_frequency, :v_phase_angle,
+                                :v_createdlocal_db::timestamptz, :v_updatedlocal_db::timestamptz, :result_json
+                            )
+                        `, {
                         replacements: {
                             v_main_voltage_ry: main_voltage_ry,
                             v_main_voltage_yb: main_voltage_yb,
@@ -62,9 +64,9 @@ module.exports = {
                         },
                         type: sequelize.QueryTypes.RAW
                     });
-        
+
                     const mains = result[0].result_json;
-        
+
                     const datawithIST = await mains && {
                         ...mains,
                         createdlocal_db: convertToIST(mains.createdlocal_db),
@@ -72,15 +74,17 @@ module.exports = {
                         createdAt: convertToIST(mains.createdAt),
                         updatedAt: convertToIST(mains.updatedAt),
                     }
-        
+
                     const data = mains === null ? 'Already saved same data in database' : datawithIST;
-                    return data;
-                
-                }))
-            )
-           
+                    createdMains.push(data);
+                } catch (innerError) {
+                    createdMains.push({ error: `Failed to process data for genset: ${innerError.message}` });
+                }
+
+            }
+
             return res.status(200).send(createdMains);
-            
+
         } catch (error) {
             return res.status(400).json(
                 error.message

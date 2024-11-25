@@ -50,25 +50,26 @@ module.exports = {
         const alertsArray = req.body;
 
         try {
-            const createdAlert = await Promise.all(
-                alertsArray.map((async (alertData) => { 
-                    const { faultCode, faultType, alertCategory, date, resolved, status, imageType, details, additionalInfo, createdlocal_db, updatedlocal_db } = alertData;
+            const createdAlert = []
+            for (const alertData of alertsArray) {
+                const { faultCode, faultType, alertCategory, date, resolved, status, imageType, details, additionalInfo, createdlocal_db, updatedlocal_db } = alertData;
 
+                try {
                     const [result, metadata] = await sequelize.query(
                         `CALL public.unique_alert(
-                            :v_faultcode, 
-                            :v_faulttype, 
-                            :v_alertcategory, 
-                            :v_date::timestamptz, 
-                            :v_resolved::timestamptz, 
-                            :v_status, 
-                            :v_imagetype, 
-                            :v_details, 
-                            :v_additionalinfo, 
-                            :v_createdlocal_db::timestamptz, 
-                            :v_updatedlocal_db::timestamptz, 
-                            :result_json
-                        )`,
+                                :v_faultcode, 
+                                :v_faulttype, 
+                                :v_alertcategory, 
+                                :v_date::timestamptz, 
+                                :v_resolved::timestamptz, 
+                                :v_status, 
+                                :v_imagetype, 
+                                :v_details, 
+                                :v_additionalinfo, 
+                                :v_createdlocal_db::timestamptz, 
+                                :v_updatedlocal_db::timestamptz, 
+                                :result_json
+                            )`,
                         {
                             replacements: {
                                 v_faultcode: faultCode,
@@ -87,8 +88,6 @@ module.exports = {
                             type: sequelize.QueryTypes.RAW,
                         }
                     );
-                    console.log(result)
-        
                     const alerts = result[0]?.result_json;
 
                     const datawithIST = await alerts && {
@@ -100,14 +99,17 @@ module.exports = {
                         createdAt: convertToIST(alerts.createdAt),
                         updatedAt: convertToIST(alerts.updatedAt),
                     }
-        
+
                     const data = alerts === null ? 'Already saved same data in database' : datawithIST;
-                    return data;
-                }))
-            )
-           
+                    createdAlert.push(data);
+                } catch (innerError) {
+                    createdAlternator.push({ error: `Failed to process data for genset: ${innerError.message}` });
+                }
+
+            }
+
             return res.status(200).send(createdAlert);
-            
+
         } catch (error) {
             return res.status(400).json(
                 error.message

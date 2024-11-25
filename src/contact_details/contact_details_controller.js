@@ -39,44 +39,48 @@ module.exports = {
         const contactArray = req.body;
      
         try {
-            const createdArray = await Promise.all(
-                contactArray.map((async (contactData) => {
+            const createdArray = []
+            for (const contactData of contactArray) {
                     const { local_email, local_phone, koel_email, koel_phone, local_address, createdlocal_db, updatedlocal_db } = contactData;
 
-                    const [result, metadata] = await sequelize.query(`
-                        CALL unique_contact_details(
-                            :v_local_email, :v_local_phone, :v_koel_email, :v_koel_phone, :v_local_address,
-                            :v_createdlocal_db::timestamptz, :v_updatedlocal_db::timestamptz, :result_json
-                        )
-                    `, {
-                        replacements: {
-                            v_local_email: local_email, 
-                            v_local_phone: local_phone, 
-                            v_koel_email: koel_email, 
-                            v_koel_phone: koel_phone, 
-                            v_local_address: local_address,
-                            v_createdlocal_db: createdlocal_db,
-                            v_updatedlocal_db: updatedlocal_db,
-                            result_json: null
-                        },
-                        type: sequelize.QueryTypes.RAW
-                    });
-        
-                    const contact = result[0].result_json;
-        
-                    const datawithIST = await contact && {
-                            ...contact,
-                            createdlocal_db: convertToIST(contact.createdlocal_db),
-                            updatedlocal_db: convertToIST(contact.updatedlocal_db),
-                            createdAt: convertToIST(contact.createdAt),
-                            updatedAt: convertToIST(contact.updatedAt),
-                        }
-                    
-                        const data = contact === null ? 'Already saved same data in database' : datawithIST;
-                        return data;
-                }))
-            )
+                    try {
+                        const [result, metadata] = await sequelize.query(`
+                            CALL unique_contact_details(
+                                :v_local_email, :v_local_phone, :v_koel_email, :v_koel_phone, :v_local_address,
+                                :v_createdlocal_db::timestamptz, :v_updatedlocal_db::timestamptz, :result_json
+                            )
+                        `, {
+                            replacements: {
+                                v_local_email: local_email, 
+                                v_local_phone: local_phone, 
+                                v_koel_email: koel_email, 
+                                v_koel_phone: koel_phone, 
+                                v_local_address: local_address,
+                                v_createdlocal_db: createdlocal_db,
+                                v_updatedlocal_db: updatedlocal_db,
+                                result_json: null
+                            },
+                            type: sequelize.QueryTypes.RAW
+                        });
             
+                        const contact = result[0].result_json;
+            
+                        const datawithIST = await contact && {
+                                ...contact,
+                                createdlocal_db: convertToIST(contact.createdlocal_db),
+                                updatedlocal_db: convertToIST(contact.updatedlocal_db),
+                                createdAt: convertToIST(contact.createdAt),
+                                updatedAt: convertToIST(contact.updatedAt),
+                            }
+                        
+                            const data = contact === null ? 'Already saved same data in database' : datawithIST;
+                            createdArray.push(data);
+                    } catch (innerError) {
+                        createdArray.push({ error: `Failed to process data for genset: ${innerError.message}` });
+                    }
+                   
+                }
+
             return res.status(200).send(createdArray);
                 
         } catch (error) {

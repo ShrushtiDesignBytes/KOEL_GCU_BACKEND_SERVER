@@ -39,55 +39,59 @@ module.exports = {
         const systemArray = req.body;
 
         try {
-            const createdSystem = await Promise.all(
-                systemArray.map((async (systemData) => {
+            const createdSystem = []
+            
+            for (const systemData of systemArray) { 
 
                     const { g_hardware_V, g_hardware_P, g_hardware_S, g_software_V, g_software_P, g_software_S, h_hardware_V, h_hardware_P, h_hardware_S, h_software_V, h_software_P, h_software_S, createdlocal_db, updatedlocal_db } = systemData;
 
-                    const [result, metadata] = await sequelize.query(`
-                        CALL unique_system_info(
-                           :v_g_hardware_V, :v_g_hardware_S, :v_g_hardware_P,
-                           :v_g_software_V, :v_g_software_S, :v_g_software_P,
-                           :v_h_hardware_V, :v_h_hardware_S, :v_h_hardware_P,
-                           :v_h_software_V, :v_h_software_S, :v_h_software_P,
-                           :v_createdlocal_db::timestamptz, :v_updatedlocal_db::timestamptz, :result_json
-               );
-                   `, {
-                       replacements: {
-                           v_g_hardware_V: g_hardware_V,
-                           v_g_hardware_S: g_hardware_S,
-                           v_g_hardware_P: g_hardware_P,
-                           v_g_software_V: g_software_V,
-                           v_g_software_S: g_software_S,
-                           v_g_software_P: g_software_P,
-                           v_h_hardware_V: h_hardware_V,
-                           v_h_hardware_S: h_hardware_S,
-                           v_h_hardware_P: h_hardware_P,
-                           v_h_software_V: h_software_V,
-                           v_h_software_S: h_software_S,
-                           v_h_software_P: h_software_P,
-                           v_createdlocal_db: createdlocal_db,
-                           v_updatedlocal_db: updatedlocal_db,
-                           result_json: null
-                       },
-                       type: sequelize.QueryTypes.RAW
-                   });
-       
-                   const system = result[0].result_json;
-       
-                   const datawithIST = system && {
-                       ...system,
-                       createdlocal_db: convertToIST(system.createdlocal_db),
-                       updatedlocal_db: convertToIST(system.updatedlocal_db),
-                       createdAt: convertToIST(system.createdAt),
-                       updatedAt: convertToIST(system.updatedAt),
-                   }
-       
-                   const data = system === null ? 'Already saved same data in database' : datawithIST;
-                   return data;
+                    try {
+                        const [result, metadata] = await sequelize.query(`
+                            CALL unique_system_info(
+                               :v_g_hardware_V, :v_g_hardware_S, :v_g_hardware_P,
+                               :v_g_software_V, :v_g_software_S, :v_g_software_P,
+                               :v_h_hardware_V, :v_h_hardware_S, :v_h_hardware_P,
+                               :v_h_software_V, :v_h_software_S, :v_h_software_P,
+                               :v_createdlocal_db::timestamptz, :v_updatedlocal_db::timestamptz, :result_json
+                   );
+                       `, {
+                           replacements: {
+                               v_g_hardware_V: g_hardware_V,
+                               v_g_hardware_S: g_hardware_S,
+                               v_g_hardware_P: g_hardware_P,
+                               v_g_software_V: g_software_V,
+                               v_g_software_S: g_software_S,
+                               v_g_software_P: g_software_P,
+                               v_h_hardware_V: h_hardware_V,
+                               v_h_hardware_S: h_hardware_S,
+                               v_h_hardware_P: h_hardware_P,
+                               v_h_software_V: h_software_V,
+                               v_h_software_S: h_software_S,
+                               v_h_software_P: h_software_P,
+                               v_createdlocal_db: createdlocal_db,
+                               v_updatedlocal_db: updatedlocal_db,
+                               result_json: null
+                           },
+                           type: sequelize.QueryTypes.RAW
+                       });
+           
+                       const system = result[0].result_json;
+           
+                       const datawithIST = system && {
+                           ...system,
+                           createdlocal_db: convertToIST(system.createdlocal_db),
+                           updatedlocal_db: convertToIST(system.updatedlocal_db),
+                           createdAt: convertToIST(system.createdAt),
+                           updatedAt: convertToIST(system.updatedAt),
+                       }
+           
+                       const data = system === null ? 'Already saved same data in database' : datawithIST;
+                       createdSystem.push(data);
+                    } catch (innerError) {
+                        createdSystem.push({ error: `Failed to process data for genset: ${innerError.message}` });
+                    }
 
-                }))
-            )         
+                }       
 
             return res.status(200).send(createdSystem);
 
