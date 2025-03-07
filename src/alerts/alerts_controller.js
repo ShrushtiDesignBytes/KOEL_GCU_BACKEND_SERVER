@@ -103,7 +103,7 @@ module.exports = {
                     const data = alerts === null ? 'Already saved same data in database' : datawithIST;
                     createdAlert.push(data);
                 } catch (innerError) {
-                    createdAlternator.push({ error: `Failed to process data for genset: ${innerError.message}` });
+                    createdAlert.push({ error: `Failed to process data for genset: ${innerError.message}` });
                 }
 
             }

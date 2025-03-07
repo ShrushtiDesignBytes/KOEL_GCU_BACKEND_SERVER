@@ -21,6 +21,11 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             defaultValue: 1,
         },
+        cooldown: {
+            type: DataTypes.SMALLINT,
+            allowNull: false,
+            defaultValue: 1, 
+        },
         createdlocal_db: {
             type: DataTypes.DATE,
             defaultValue: DataTypes.NOW,
