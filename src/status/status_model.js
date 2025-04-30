@@ -26,6 +26,10 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             defaultValue: 1, 
         },
+        timestamps: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+        },
         createdlocal_db: {
             type: DataTypes.DATE,
             defaultValue: DataTypes.NOW,

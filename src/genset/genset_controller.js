@@ -22,12 +22,45 @@ module.exports = {
                     updatedAt: convertToIST(record.updatedAt),
                 }
             });
-            //    const genset = await Genset.findOne({
-            //     order: [['createdAt', 'DESC']]
-            //   });
+            
+            const graphdata = await Genset.sequelize.query(`
+                WITH hourly_data AS (
+                SELECT
+                    DATE_TRUNC('hour', createdlocal_db) AS hour,
+                    AVG(loads) AS avg_loads,
+                    COUNT(*) * (10.0 / 3600.0) AS total_hours  -- 10 seconds sampling assumed
+                FROM genset
+                WHERE engine_speed > 750
+                GROUP BY hour
+                ),
+                bucketed_data AS (
+                SELECT
+                CASE 
+                    WHEN avg_loads BETWEEN 0 AND 20 THEN '0-20%'
+                    WHEN avg_loads > 20 AND avg_loads <= 40 THEN '20-40%'
+                    WHEN avg_loads > 40 AND avg_loads <= 60 THEN '40-60%'
+                    WHEN avg_loads > 60 AND avg_loads <= 80 THEN '60-80%'
+                    WHEN avg_loads > 80 AND avg_loads <= 100 THEN '80-100%'
+                    ELSE '>100%'
+                END AS load_range,
+                total_hours
+                FROM hourly_data
+                )
+            SELECT 
+            load_range,
+            SUM(total_hours) AS total_hours
+            FROM bucketed_data
+            GROUP BY load_range
+            ORDER BY load_range;
+    
+             `, {
+                    type: sequelize.QueryTypes.SELECT
+                });
+
             return res.status(200).send(
                 // genset
-                datawithIST
+                datawithIST,
+                graphdata
             );
 
         } catch (error) {
