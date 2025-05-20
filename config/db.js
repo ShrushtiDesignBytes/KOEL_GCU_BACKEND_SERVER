@@ -22,6 +22,7 @@ db.sequelize = sequelize;
 
 
 db.genset = require('../src/genset/genset_models')(sequelize,DataTypes);
+db.paralleling = require('../src/paralleling/paralleling_models')(sequelize,DataTypes);
 db.engine = require('../src/engine/engine_models')(sequelize,DataTypes);
 db.mains = require('../src/mains/mains_models')(sequelize,DataTypes);
 db.alternator = require('../src/alternator/alternator_models')(sequelize,DataTypes);

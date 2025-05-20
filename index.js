@@ -8,6 +8,7 @@ const gensetRoutes = require('./src/genset/genset_routes.js');
 const engineRoutes = require('./src/engine/engine_routes.js');
 const mainsRoutes = require('./src/mains/mains_routes.js');
 const alternatorRoutes = require('./src/alternator/alternator_routes.js');
+const parallelingRoutes = require('./src/paralleling/paralleling_routes.js')
 const alertsRoutes = require('./src/alerts/alerts_routes.js');
 const systemRoutes = require('./src/system_details/system_details_routes.js');
 const contactRoutes = require('./src/contact_details/contact_details_routes.js');
@@ -23,6 +24,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors())
 
 app.use('/genset', gensetRoutes);
+app.use('/paralleling', parallelingRoutes);
 app.use('/engine', engineRoutes);
 app.use('/mains', mainsRoutes);
 app.use('/alternator', alternatorRoutes);

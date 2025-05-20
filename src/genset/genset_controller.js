@@ -57,11 +57,11 @@ module.exports = {
                     type: sequelize.QueryTypes.SELECT
                 });
 
-            return res.status(200).send(
+            return res.status(200).send({
                 // genset
                 datawithIST,
                 graphdata
-            );
+            });
 
         } catch (error) {
             return res.status(400).send(
