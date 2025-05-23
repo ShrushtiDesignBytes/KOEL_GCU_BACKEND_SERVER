@@ -45,6 +45,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.DECIMAL,
             allowNull: false
         },
+        total_kw: {
+             type: DataTypes.INTEGER,
+            allowNull: false
+        },
         createdlocal_db: {
             type: DataTypes.DATE,
             defaultValue: DataTypes.NOW,

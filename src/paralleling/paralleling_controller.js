@@ -50,7 +50,7 @@ module.exports = {
             avg_power_kvahr,
             voltage,
             frequency,
-            power_factor, createdlocal_db, updatedlocal_db } = req.body;
+            power_factor, total_kw, createdlocal_db, updatedlocal_db } = req.body;
         try {
             const paralleling = await Paralleling.create({
                 sync,
@@ -62,7 +62,7 @@ module.exports = {
                 avg_power_kvahr,
                 voltage,
                 frequency,
-                power_factor, createdlocal_db, updatedlocal_db
+                power_factor, total_kw, createdlocal_db, updatedlocal_db
             });
 
             const datawithIST = {
@@ -125,7 +125,7 @@ module.exports = {
             avg_power_kvahr,
             voltage,
             frequency,
-            power_factor, createdlocal_db, updatedlocal_db } = req.body;
+            power_factor, total_kw, createdlocal_db, updatedlocal_db } = req.body;
         try {
             const genset = await Paralleling.update({
                 sync,
@@ -137,7 +137,7 @@ module.exports = {
                 avg_power_kvahr,
                 voltage,
                 frequency,
-                power_factor, createdlocal_db, updatedlocal_db
+                power_factor, total_kw, createdlocal_db, updatedlocal_db
             },
                 {
                     where: { id }
