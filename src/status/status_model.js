@@ -30,6 +30,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             allowNull: false,
         },
+        text: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
         createdlocal_db: {
             type: DataTypes.DATE,
             defaultValue: DataTypes.NOW,

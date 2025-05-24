@@ -38,10 +38,10 @@ module.exports = {
 
     //add genset
     createStatus: async (req, res) => {
-        const { status, status_A, status_B, cooldown, timestamps, createdlocal_db, updatedlocal_db } = req.body;
+        const { status, status_A, status_B, cooldown, timestamps, text, createdlocal_db, updatedlocal_db } = req.body;
         try {
             const data = await Status.create({
-                status, status_A, status_B, cooldown, timestamps, createdlocal_db, updatedlocal_db
+                status, status_A, status_B, cooldown, timestamps, text, createdlocal_db, updatedlocal_db
             });
 
             // const datawithIST = {
@@ -64,10 +64,10 @@ module.exports = {
     //genset update by id
     updateStatus: async (req, res) => {
         const id = req.params.id;
-        const {status, status_A, status_B, cooldown, createdlocal_db, updatedlocal_db } = req.body;
+        const {status, status_A, status_B, cooldown, text, createdlocal_db, updatedlocal_db } = req.body;
         try {
             const data = await Status.update({
-                status, status_A, status_B, cooldown, createdlocal_db, updatedlocal_db
+                status, status_A, status_B, cooldown, text, createdlocal_db, updatedlocal_db
             },
                 {
                     where: { id }
