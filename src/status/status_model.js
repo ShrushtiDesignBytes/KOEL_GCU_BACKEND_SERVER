@@ -6,17 +6,22 @@ module.exports = (sequelize, DataTypes) => {
             autoIncrement: true,
             primaryKey: true
         },
-        status: {
+        start_stop: {
             type: DataTypes.SMALLINT,
             allowNull: false,
             defaultValue: 1,
         },
-        status_A: {
+        auto_manual: {
             type: DataTypes.SMALLINT,
             allowNull: false,
             defaultValue: 1,
         },
-        status_B: {
+        breakeropen_close: {
+            type: DataTypes.SMALLINT,
+            allowNull: false,
+            defaultValue: 1,
+        },
+        reset: {
             type: DataTypes.SMALLINT,
             allowNull: false,
             defaultValue: 1,
@@ -26,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             defaultValue: 1, 
         },
-        timestamps: {
+        timer: {
             type: DataTypes.INTEGER,
             allowNull: false,
         },
